@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "llm-actions"
+version = "0.1.0"
+description = ""
+authors = ["Cory Mills <contact@corymills.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.planner.dependencies]
+ollama = "^0.2.1"
+langchain = "^0.2.3"
+langchain-community = "^0.2.4"
+langgraph = "^0.0.65"
+langchain-experimental = "^0.0.60"
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.4"
+
+[tool.poetry.group.code.dependencies]
+fastapi = "^0.111.0"
+selenium = "^4.21.0"
+uvicorn = "^0.30.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
