@@ -1,34 +1,37 @@
 FROM alpine:latest
 
-# Install system dependencies
-RUN apk add --no-cache \
-    curl \
-    gcc \
-    libressl-dev \
-    musl-dev \
-    libffi-dev \
-    make \
+# Install required packages
+RUN apk update && apk add --no-cache \
     python3 \
-    python3-dev
-
-# Install Poetry
-RUN curl -sSL https://install.python-poetry.org | python3 -
-
-# Add Poetry to PATH
-ENV PATH="/root/.local/bin:${PATH}"
+    py3-pip \
+    firefox-esr \
+    wget \
+    gcc \
+    python3-dev \
+    musl-dev \
+    linux-headers \
+    libffi-dev
 
 # Set the working directory
 WORKDIR /app
+
+# Create a virtual environment
+RUN python3 -m venv /app/venv
+
+# Activate the virtual environment
+ENV PATH="/app/venv/bin:$PATH"
+
+# Install Poetry within the virtual environment
+RUN pip3 install poetry
 
 # Copy the pyproject.toml and poetry.lock files
 COPY pyproject.toml poetry.lock ./
 
 # Install Python dependencies with Poetry
-RUN poetry config virtualenvs.create false \
-    && poetry install --only code
+RUN poetry install --with code
 
 # Copy the application code
-COPY . .
+COPY /src /src 
 
 # Run the application
-CMD ["uvicorn", "src.code_executor.code_executor:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["poetry", "run", "uvicorn", "src.code_executor.code_executor:app", "--host", "0.0.0.0", "--port", "80"]

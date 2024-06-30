@@ -20,25 +20,29 @@ async def setup_environment():
 
 @app.post("/execute")
 async def execute_code(request: Request):
-    payload = await request.json()
-    env_id = payload["env_id"]
-    code = payload["code"]
-
-    if env_id not in environments:
-        return {"error": "Environment not found"}
-
-    env = environments[env_id]
     try:
+        print(request)
+        payload = await request.json()
+        print(payload)
+        env_id = payload["env_id"]
+        code = payload["code"]
+
+        if env_id not in environments:
+            return {"error": "Environment not found"}
+
+        env = environments[env_id]
+    
         old_stdout = sys.stdout
         redirected_output = sys.stdout = StringIO()
         exec(code, env["globals"], env["locals"])
         sys.stdout = old_stdout
         env["code_history"].append(code)
         locals = env["locals"]
-        globals = env["locals"]
+        globals = env["globals"]
         output = redirected_output.getvalue()
+        print("output:", output)
     
-        return {"output": output, "locals": locals, "globals": globals}
+        return {"output": output}
     except Exception as e:
         return {"error": str(e)}
 

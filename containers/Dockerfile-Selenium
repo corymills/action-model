@@ -1,0 +1,21 @@
+FROM alpine:latest
+
+# Install Firefox and dependencies
+RUN apk update && apk add firefox
+
+# Install OpenJDK 8
+RUN apk add openjdk8-jre
+
+# Install Selenium
+RUN apk add wget
+RUN wget https://selenium-release.storage.googleapis.com/4.22/selenium-server-4.22.0.jar
+
+# Install VNC server 
+RUN apk add x11vnc xvfb
+
+# Expose ports
+EXPOSE 4444 
+EXPOSE 5900
+
+# Start Selenium and VNC
+CMD xvfb-run --server-num=$DISPLAY_NUM --server-args="-screen 0 1920x1080x24" java -jar selenium-server-*.jar & x11vnc -display :$DISPLAY_NUM -forever -passwd secret
