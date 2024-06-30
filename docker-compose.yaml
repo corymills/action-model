@@ -1,0 +1,27 @@
+version: '3'
+services:
+  selenium:
+    image: selenium/standalone-chromium:latest
+    ports:
+      - "4444:4444"
+      - "7900:7900"
+    shm_size: 2g
+    networks:
+      - app-network
+
+  code-executor:
+    build:
+      context: .
+      dockerfile: containers/Dockerfile-Code
+    ports:
+      - "8085:8085"
+    volumes:
+      - ./src:/app/src
+    networks:
+      - app-network
+    depends_on:
+      - selenium
+
+networks:
+  app-network:
+    driver: bridge

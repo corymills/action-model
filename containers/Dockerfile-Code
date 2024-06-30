@@ -33,5 +33,7 @@ RUN poetry install --with code
 # Copy the application code
 COPY /src /src 
 
+EXPOSE 8085
+
 # Run the application
-CMD ["poetry", "run", "uvicorn", "src.code_executor.code_executor:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["poetry", "run", "uvicorn", "src.code_executor.code_executor:app", "--host", "0.0.0.0", "--port", "8085"]
